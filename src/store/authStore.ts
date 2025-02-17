@@ -42,7 +42,14 @@ export const useAuthStore = create<AuthState>((set) => ({
     const token = localStorage.getItem("token");
     if (token) {
       const decodedUser = jwtDecode<User>(token);
-      set({ token, user: decodedUser });
+
+      // Prevent unnecessary state updates to avoid infinite loop
+      set((state) => {
+        if (state.token !== token) {
+          return { token, user: decodedUser };
+        }
+        return state;
+      });
     }
   },
 
