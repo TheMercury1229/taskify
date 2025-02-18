@@ -7,12 +7,16 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
   const { decoded, error, status } = verifyToken(req);
   if (error) return NextResponse.json({ error }, { status });
-  if (typeof decoded !== "string") {
-    throw new Error("Invalid token");
+
+  // Ensure `decoded` is an object and contains the user ID
+  if (!decoded || typeof decoded !== "object" || !decoded.id) {
+    return NextResponse.json(
+      { error: "Invalid token payload" },
+      { status: 400 }
+    );
   }
-  const decodedParsed = JSON.parse(decoded);
   const userCategories = await db.query.categories.findMany({
-    where: eq(categories.userId, decodedParsed.id),
+    where: eq(categories.userId, decoded.id),
   });
 
   return NextResponse.json(userCategories);
@@ -20,16 +24,17 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const { decoded, error, status } = verifyToken(req);
-  if (error) return NextResponse.json({ error }, { status });
-  if (typeof decoded !== "string") {
-    throw new Error("Invalid token");
+  if (!decoded || typeof decoded !== "object" || !decoded.id) {
+    return NextResponse.json(
+      { error: "Invalid token payload" },
+      { status: 400 }
+    );
   }
-  const decodedParsed = JSON.parse(decoded);
   const { name } = await req.json();
 
   const newCategory = await db
     .insert(categories)
-    .values({ userId: decodedParsed.id, name })
+    .values({ userId: decoded.id, name })
     .returning();
 
   return NextResponse.json(newCategory, { status: 201 });

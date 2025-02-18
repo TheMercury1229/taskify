@@ -8,13 +8,14 @@ import { verifyToken } from "@/lib/verifyToken";
 export async function GET(req: NextRequest) {
   try {
     const { decoded, error, status } = verifyToken(req);
-    if (error) return NextResponse.json({ error }, { status });
-    if (typeof decoded !== "string") {
-      throw new Error("Invalid token");
+    if (!decoded || typeof decoded !== "object" || !decoded.id) {
+      return NextResponse.json(
+        { error: "Invalid token payload" },
+        { status: 400 }
+      );
     }
-    const decodedParsed = JSON.parse(decoded);
     const userProjects = await db.query.projects.findMany({
-      where: eq(projects.userId, parseInt(decodedParsed.id)),
+      where: eq(projects.userId, parseInt(decoded.id)),
     });
 
     return NextResponse.json(userProjects);
@@ -27,10 +28,13 @@ export async function POST(req: NextRequest) {
   try {
     const { decoded, error, status } = verifyToken(req);
     if (error) return NextResponse.json({ error }, { status });
-    if (typeof decoded !== "string") {
-      throw new Error("Invalid token");
+    if (!decoded || typeof decoded !== "object" || !decoded.id) {
+      return NextResponse.json(
+        { error: "Invalid token payload" },
+        { status: 400 }
+      );
     }
-    const userId = JSON.parse(decoded).id;
+    const userId = parseInt(decoded.id);
     const { name } = await req.json();
 
     const newProject = await db

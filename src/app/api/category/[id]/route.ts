@@ -9,11 +9,12 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const { decoded, error, status } = verifyToken(req);
-  if (error) return NextResponse.json({ error }, { status });
-  if (typeof decoded !== "string") {
-    throw new Error("Invalid token");
+  if (!decoded || typeof decoded !== "object" || !decoded.id) {
+    return NextResponse.json(
+      { error: "Invalid token payload" },
+      { status: 400 }
+    );
   }
-  const decodedParsed = JSON.parse(decoded);
   const category = await db.query.categories.findMany({
     where: eq(categories.userId, Number(params.id)),
   });
@@ -33,8 +34,11 @@ export async function PATCH(
 ) {
   const { decoded, error, status } = verifyToken(req);
   if (error) return NextResponse.json({ error }, { status });
-  if (typeof decoded !== "string") {
-    throw new Error("Invalid token");
+  if (!decoded || typeof decoded !== "object" || !decoded.id) {
+    return NextResponse.json(
+      { error: "Invalid token payload" },
+      { status: 400 }
+    );
   }
   const { name } = await req.json();
   const updatedCategory = await db
@@ -51,8 +55,11 @@ export async function DELETE(
 ) {
   const { decoded, error, status } = verifyToken(req);
   if (error) return NextResponse.json({ error }, { status });
-  if (typeof decoded !== "string") {
-    throw new Error("Invalid token");
+  if (!decoded || typeof decoded !== "object" || !decoded.id) {
+    return NextResponse.json(
+      { error: "Invalid token payload" },
+      { status: 400 }
+    );
   }
   await db.delete(categories).where(eq(categories.id, Number(params.id)));
   return NextResponse.json({ message: "Category deleted", success: true });

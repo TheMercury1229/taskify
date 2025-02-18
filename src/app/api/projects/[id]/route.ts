@@ -66,16 +66,12 @@ export async function DELETE(
     return NextResponse.json({ error: "Project not found" }, { status: 404 });
   const { decoded, error, status } = verifyToken(req);
   if (error) return NextResponse.json({ error }, { status });
-  if (typeof decoded !== "string") {
-    throw new Error("Invalid token");
-  }
-  if (decoded !== JSON.stringify(project.userId)) {
+  if (!decoded || typeof decoded !== "object" || !decoded.id) {
     return NextResponse.json(
-      { error: "Unauthorized", success: false },
-      { status: 403 }
+      { error: "Invalid token payload" },
+      { status: 400 }
     );
   }
-
   await db.delete(projects).where(eq(projects.id, Number(params.id)));
   return NextResponse.json({ message: "Project deleted", success: true });
 }

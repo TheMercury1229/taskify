@@ -34,10 +34,10 @@ export const tasks = pgTable("tasks", {
   completed: boolean("completed").default(false),
   status: taskStatusEnum("status").default("pending"), // New field
   projectId: integer("project_id")
-    .references(() => projects.id)
+    .references(() => projects.id, { onDelete: "cascade" })
     .default(0),
   categoryId: integer("category_id")
-    .references(() => categories.id)
+    .references(() => categories.id, { onDelete: "cascade" })
     .default(0),
   createdAt: timestamp("created_at").defaultNow(),
 });

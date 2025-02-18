@@ -7,13 +7,18 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
   const { decoded, error, status } = verifyToken(req);
   if (error) return NextResponse.json({ error, success: false }, { status });
-  if (typeof decoded !== "string") {
-    throw new Error("Invalid token");
+
+  if (!decoded || typeof decoded !== "object" || !decoded.id) {
+    return NextResponse.json(
+      { error: "Invalid token payload" },
+      { status: 400 }
+    );
   }
-  const decodedParsed = JSON.parse(decoded);
+
   const userTasks = await db.query.tasks.findMany({
-    where: eq(tasks.userId, decodedParsed.id),
+    where: eq(tasks.userId, decoded.id),
   });
+
   return NextResponse.json(userTasks);
 }
 
@@ -21,9 +26,14 @@ export async function POST(req: NextRequest) {
   const { decoded, error, status: st } = verifyToken(req);
   if (error)
     return NextResponse.json({ error, success: false }, { status: st });
-  if (typeof decoded !== "string") {
-    throw new Error("Invalid token");
+
+  if (!decoded || typeof decoded !== "object" || !decoded.id) {
+    return NextResponse.json(
+      { error: "Invalid token payload" },
+      { status: 400 }
+    );
   }
+
   const {
     title,
     description,
@@ -33,14 +43,16 @@ export async function POST(req: NextRequest) {
     projectId,
     categoryId,
   } = await req.json();
-  const decodedParsed = JSON.parse(decoded);
+
+  const parsedDueDate = dueDate ? new Date(dueDate) : null;
+
   const newTask = await db
     .insert(tasks)
     .values({
-      userId: Number(decodedParsed.id),
+      userId: Number(decoded.id),
       title,
       description,
-      dueDate,
+      dueDate: parsedDueDate,
       priority,
       status,
       projectId,

@@ -16,6 +16,11 @@ interface AuthState {
   loadUser: () => void;
   error: string | null;
   login: (formData: { email: string; password: string }) => Promise<any>;
+  register: (formData: {
+    name: string;
+    email: string;
+    password: string;
+  }) => Promise<any>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -65,6 +70,16 @@ export const useAuthStore = create<AuthState>((set) => ({
       return res;
     } catch (error) {
       console.error("Login error:", error);
+      return false;
+    }
+  },
+  register: async (formData) => {
+    try {
+      set({ error: null });
+      const res = await axiosInstance.post("/auth/register", formData);
+      return res;
+    } catch (error) {
+      console.error("Register error:", error);
       return false;
     }
   },

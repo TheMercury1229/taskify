@@ -10,7 +10,12 @@ export async function GET(
 ) {
   const { decoded, error, status } = verifyToken(req);
   if (error) return NextResponse.json({ error, success: false }, { status });
-
+  if (!decoded || typeof decoded !== "object" || !decoded.id) {
+    return NextResponse.json(
+      { error: "Invalid token payload" },
+      { status: 400 }
+    );
+  }
   const task = await db.query.tasks.findFirst({
     where: eq(tasks.id, Number(params.id)),
   });
@@ -26,6 +31,12 @@ export async function PATCH(
 ) {
   const { decoded, error, status } = verifyToken(req);
   if (error) return NextResponse.json({ error, success: false }, { status });
+  if (!decoded || typeof decoded !== "object" || !decoded.id) {
+    return NextResponse.json(
+      { error: "Invalid token payload" },
+      { status: 400 }
+    );
+  }
   const updates = await req.json();
   const updatedTask = await db
     .update(tasks)
@@ -40,6 +51,12 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   const { decoded, error, status } = verifyToken(req);
+  if (!decoded || typeof decoded !== "object" || !decoded.id) {
+    return NextResponse.json(
+      { error: "Invalid token payload" },
+      { status: 400 }
+    );
+  }
   if (error) return NextResponse.json({ error, success: false }, { status });
   await db.delete(tasks).where(eq(tasks.id, Number(params.id)));
   return NextResponse.json({ message: "Task deleted" });

@@ -12,18 +12,63 @@ import {
 import { dummyTasks, dummyProjects, dummyCategories } from "@/data";
 import { TaskList } from "@/components/dashboard/TaskList";
 import { PlusCircle, X } from "lucide-react";
+import Link from "next/link";
+import { useTaskStore } from "@/store/taskStore";
+import { useQuery } from "@tanstack/react-query";
+import { Category, Project, Task } from "@/index";
 
 export default function TasksPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const { fetchTasks, fetchProjects, fetchCategories } = useTaskStore();
 
-  const filteredTasks = dummyTasks.filter((task) => {
+  // ✅ Fetch tasks, projects, and categories using React Query
+  const { data: tasks = [], isLoading: tasksLoading } = useQuery({
+    queryKey: ["tasks"],
+    queryFn: fetchTasks,
+  });
+  const { data: projects = [], isLoading: projectsLoading } = useQuery({
+    queryKey: ["projects"],
+    queryFn: fetchProjects,
+  });
+  const { data: categories = [], isLoading: categoriesLoading } = useQuery({
+    queryKey: ["categories"],
+    queryFn: fetchCategories,
+  });
+
+  if (tasksLoading || projectsLoading || categoriesLoading)
+    return <p>Loading data...</p>;
+
+  const formattedTasks = tasks.map((task: Task) => {
+    const category: Category | undefined = categories.find(
+      (c: Category) => c.id === task.categoryId
+    ) as Category | undefined;
+    const project: Project | undefined = projects.find(
+      (p: Project) => p.id === task.projectId
+    ) as Project | undefined;
+    if (category === undefined || project === undefined) return task;
+    // Add type guards to ensure project and category are not undefined
+    if (!project || !category) {
+      return task;
+    }
+    const projectName = project?.name ?? "Unknown Project";
+    const categoryName = category?.name ?? "Unknown Category";
+
+    return {
+      ...task,
+      categoryName,
+      projectName,
+    };
+  });
+
+  const filteredTasks = formattedTasks.filter((task: Task) => {
     return (
-      (!selectedCategory || task.categoryName === selectedCategory) &&
-      (!selectedProject || task.projectName === selectedProject) &&
-      (searchTerm === "" ||
-        task.title.toLowerCase().includes(searchTerm.toLowerCase()))
+      (!selectedCategory || task?.categoryName === selectedCategory) &&
+      (!selectedProject ||
+        (task?.projectName?.toLowerCase() === selectedProject?.toLowerCase() &&
+          (searchTerm === "" ||
+            task?.title.toLowerCase().includes(searchTerm.toLowerCase()))))
     );
   });
 
@@ -31,10 +76,12 @@ export default function TasksPage() {
     <section className="p-4">
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-3xl font-semibold">Tasks</h1>
-        <Button size={"lg"} className="flex items-center gap-2">
-          <PlusCircle />
-          Add Task
-        </Button>
+        <Link href="/dashboard/tasks/create" passHref>
+          <Button size={"lg"} className="flex items-center gap-2">
+            <PlusCircle />
+            Add Task
+          </Button>
+        </Link>
       </div>
 
       {/* Filters */}
@@ -60,9 +107,9 @@ export default function TasksPage() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All</SelectItem>
-            {dummyCategories.map((category) => (
-              <SelectItem key={category.id} value={category.name}>
-                {category.name}
+            {categories.map((category: Category) => (
+              <SelectItem key={category?.id} value={category?.name}>
+                {category?.name}
               </SelectItem>
             ))}
           </SelectContent>
@@ -71,7 +118,7 @@ export default function TasksPage() {
         {/* Project Filter */}
         <Select
           onValueChange={(value) =>
-            setSelectedCategory(value === "all" ? null : value)
+            setSelectedProject(value === "all" ? null : value)
           }
           value={selectedProject || undefined}
         >
@@ -80,7 +127,7 @@ export default function TasksPage() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All</SelectItem>
-            {dummyProjects.map((project) => (
+            {projects.map((project: Project) => (
               <SelectItem key={project.id} value={project.name}>
                 {project.name}
               </SelectItem>

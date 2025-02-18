@@ -1,8 +1,17 @@
+"use client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlusIcon } from "lucide-react";
 import { dummyProjects, dummyTasks } from "@/data";
 import React from "react";
 import Link from "next/link";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import AddProjectDialog from "@/components/dialogs/AddProjectDialog";
 
 export default function ProjectPage() {
   return (
@@ -11,12 +20,22 @@ export default function ProjectPage() {
         <h2 className="font-semibold text-3xl">Projects</h2>
       </div>
       <div className="grid md:grid-cols-3 gap-4">
-        <Card className="hover:shadow transition-shadow border-dashed">
-          <CardContent className="flex flex-col items-center justify-center text-muted-foreground h-full pt-5">
-            <PlusIcon className="size-10 mb-2" />
-            <p className="text-sm font-medium">Add New Project</p>
-          </CardContent>
-        </Card>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Card className="hover:shadow transition-shadow border-dashed">
+              <CardContent className="flex flex-col items-center justify-center text-muted-foreground h-full pt-5">
+                <PlusIcon className="size-10 mb-2" />
+                <p className="text-sm font-medium">Add New Project</p>
+              </CardContent>
+            </Card>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add New Project</DialogTitle>
+            </DialogHeader>
+            <AddProjectDialog onClose={() => {}} />
+          </DialogContent>
+        </Dialog>
         {dummyProjects.map((project) => {
           // Get tasks for this project
           const projectTasks = dummyTasks.filter(

@@ -11,7 +11,7 @@ export const Topbar = () => {
         <Image src="/logo.svg" alt="Logo" width={40} height={40} />
         <span className="text-2xl ml-2 font-bold">Taskify</span>
       </div>
-      <div className="flex items-center gap-4 justify-end">
+      <div className="ml-auto flex items-center gap-4 justify-end">
         <ModeToggle />
         <Button>Sign Out</Button>
         <MobileSidebar />

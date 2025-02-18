@@ -25,8 +25,9 @@ import { formatDate } from "date-fns";
 interface Task {
   id: number;
   title: string;
-  projectName: string;
-  categoryName: string;
+  projectName?: string;
+
+  categoryName?: string;
   dueDate: string;
 }
 
