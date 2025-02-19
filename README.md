@@ -1,36 +1,112 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Taskify
 
-## Getting Started
+## 🚀 Introduction
+Taskify is a full-featured **task management web application** designed to help individuals and teams organize their tasks efficiently. It includes features like **task tracking, project management, calendar view, priority sorting, and user authentication**.
 
-First, run the development server:
+## 🛠️ Tech Stack
+- **Frontend:** Next.js (App Router), TypeScript, Tailwind CSS, Zustand, React Query, ShadCN
+- **Backend:** Next.js API Routes, Drizzle ORM, PostgreSQL
+- **Authentication:** JWT Authentication
+- **State Management:** Zustand
+- **Database:** PostgreSQL with Drizzle ORM
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## ✨ Features
+✅ **Task Management:** Create, update, delete, and filter tasks easily.
+✅ **Project Organization:** Manage tasks under projects for better tracking.
+✅ **Category-based Sorting:** Categorize tasks for better organization.
+✅ **Calendar View:** Visualize tasks by due date in an interactive calendar.
+✅ **Priority Sorting:** Set task priorities (High, Medium, Low).
+✅ **User Authentication:** Secure login and registration using JWT.
+✅ **Real-time Updates:** Uses React Query for seamless UI updates.
+
+---
+
+## 🎯 Getting Started
+### **1️⃣ Clone the Repository**
+```sh
+git clone https://github.com/your-username/taskify.git
+cd taskify
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### **2️⃣ Install Dependencies**
+```sh
+npm install  # or yarn install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### **3️⃣ Set Up Environment Variables**
+Create a `.env` file in the root directory and configure:
+```env
+DATABASE_URL=your_postgres_connection_url
+JWT_SECRET=your_secret_key
+NEXT_PUBLIC_API_URL=http://localhost:3000/api
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### **4️⃣ Setup Database & Migrations**
+```sh
+npx drizzle-kit push
+```
 
-## Learn More
+### **5️⃣ Run the Development Server**
+```sh
+npm run dev  # or yarn dev
+```
+The app will be available at **`http://localhost:3000`**.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔧 API Routes
+### **Auth Routes**
+| Method | Endpoint             | Description          |
+|--------|----------------------|----------------------|
+| POST   | `/api/auth/register` | Register a new user |
+| POST   | `/api/auth/login`    | User login          |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### **Tasks API**
+| Method | Endpoint            | Description                    |
+|--------|---------------------|--------------------------------|
+| GET    | `/api/tasks`        | Fetch all tasks               |
+| GET    | `/api/tasks/:id`    | Get a specific task            |
+| POST   | `/api/tasks`        | Create a new task              |
+| PATCH  | `/api/tasks/:id`    | Update a task                  |
+| DELETE | `/api/tasks/:id`    | Delete a task                  |
 
-## Deploy on Vercel
+### **Projects API**
+| Method | Endpoint            | Description                    |
+|--------|---------------------|--------------------------------|
+| GET    | `/api/projects`     | Fetch all projects            |
+| POST   | `/api/projects`     | Create a new project          |
+| DELETE | `/api/projects/:id` | Delete a project & its tasks  |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📸 Screenshots (Optional)
+Include screenshots showcasing the UI of **Taskify**.
+
+---
+
+## 🚀 Deployment
+### **Deploy on Vercel**
+```sh
+npm run build
+vercel deploy
+```
+Or use **Docker** for deployment.
+
+---
+
+## 🛠️ Future Enhancements
+- 🔹 **Task Comments** – Add discussions to tasks.
+- 🔹 **Recurring Tasks** – Automate repeating tasks.
+- 🔹 **Team Collaboration** – Share tasks with team members.
+- 🔹 **Drag & Drop** – Move tasks between statuses easily.
+
+---
+
+## 👨‍💻 Contributing
+Contributions are welcome! Feel free to submit a **pull request**.
+
+---
+
+
+💡 **Taskify - Your Ultimate Task Management Solution!** 🎯
+
