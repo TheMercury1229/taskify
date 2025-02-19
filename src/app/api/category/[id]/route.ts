@@ -4,10 +4,7 @@ import { verifyToken } from "@/lib/verifyToken";
 import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(req: NextRequest) {
   const { decoded, error, status } = verifyToken(req);
   if (error) return NextResponse.json({ error }, { status });
 
@@ -18,24 +15,21 @@ export async function GET(
     );
   }
 
-  const id = await params;
-  const categoryId = await id.id;
-  if (!categoryId) {
-    return NextResponse.json(
-      { error: "Category ID is required" },
-      { status: 400 }
-    );
+  // ✅ Extract category ID manually from the request URL
+  const url = new URL(req.url);
+  const paths = url.pathname.split("/");
+  const categoryId = paths[paths.length - 1]; // Gets the last part of the URL as ID
+
+  if (!categoryId || isNaN(Number(categoryId))) {
+    return NextResponse.json({ error: "Invalid category ID" }, { status: 400 });
   }
 
   const category = await db.query.categories.findFirst({
-    where: eq(categories.id, Number(categoryId)), // ✅ Correct filter condition
+    where: eq(categories.id, Number(categoryId)),
   });
 
   if (!category) {
-    return NextResponse.json(
-      { error: "Category not found", success: false },
-      { status: 404 }
-    );
+    return NextResponse.json({ error: "Category not found" }, { status: 404 });
   }
 
   return NextResponse.json(category);
