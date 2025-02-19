@@ -11,13 +11,13 @@ Taskify is a full-featured **task management web application** designed to help 
 - **Database:** PostgreSQL with Drizzle ORM
 
 ## ✨ Features
-✅ **Task Management:** Create, update, delete, and filter tasks easily.
-✅ **Project Organization:** Manage tasks under projects for better tracking.
-✅ **Category-based Sorting:** Categorize tasks for better organization.
-✅ **Calendar View:** Visualize tasks by due date in an interactive calendar.
-✅ **Priority Sorting:** Set task priorities (High, Medium, Low).
-✅ **User Authentication:** Secure login and registration using JWT.
-✅ **Real-time Updates:** Uses React Query for seamless UI updates.
+- ✅ **Task Management:** Create, update, delete, and filter tasks easily.
+- ✅ **Project Organization:** Manage tasks under projects for better tracking.
+- ✅ **Category-based Sorting:** Categorize tasks for better organization.
+- ✅ **Calendar View:** Visualize tasks by due date in an interactive calendar.
+- ✅ **Priority Sorting:** Set task priorities (High, Medium, Low).
+- ✅ **User Authentication:** Secure login and registration using JWT.
+- ✅ **Real-time Updates:** Uses React Query for seamless UI updates.
 
 ---
 
@@ -76,11 +76,6 @@ The app will be available at **`http://localhost:3000`**.
 | GET    | `/api/projects`     | Fetch all projects            |
 | POST   | `/api/projects`     | Create a new project          |
 | DELETE | `/api/projects/:id` | Delete a project & its tasks  |
-
----
-
-## 📸 Screenshots (Optional)
-Include screenshots showcasing the UI of **Taskify**.
 
 ---
 
