@@ -24,7 +24,7 @@ Taskify is a full-featured **task management web application** designed to help 
 ## 🎯 Getting Started
 ### **1️⃣ Clone the Repository**
 ```sh
-git clone https://github.com/your-username/taskify.git
+git clone https://github.com/TheMercury1229/taskify.git
 cd taskify
 ```
 
