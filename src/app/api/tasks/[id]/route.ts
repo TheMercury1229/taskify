@@ -6,9 +6,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const { decoded, error, status } = verifyToken(req);
+  const { id } = await params;
   if (error) return NextResponse.json({ error, success: false }, { status });
   if (!decoded || typeof decoded !== "object" || !decoded.id) {
     return NextResponse.json(
@@ -17,7 +18,7 @@ export async function GET(
     );
   }
   const task = await db.query.tasks.findFirst({
-    where: eq(tasks.id, Number(params.id)),
+    where: eq(tasks.id, Number(id)),
   });
   if (!task)
     return NextResponse.json({ error: "Task not found" }, { status: 404 });
@@ -27,9 +28,10 @@ export async function GET(
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const { decoded, error, status } = verifyToken(req);
+  const { id } = await params;
   if (error) return NextResponse.json({ error, success: false }, { status });
 
   if (!decoded || typeof decoded !== "object" || !decoded.id) {
@@ -39,7 +41,6 @@ export async function PATCH(
     );
   }
 
-  const { id } = params;
   const updates = await req.json();
 
   // ✅ Ensure dueDate is a valid Date before updating
@@ -65,7 +66,7 @@ export async function PATCH(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const { decoded, error, status } = verifyToken(req);
   if (!decoded || typeof decoded !== "object" || !decoded.id) {
