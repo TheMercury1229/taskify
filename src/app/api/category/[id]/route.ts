@@ -15,8 +15,10 @@ export async function GET(
       { status: 400 }
     );
   }
+  const param = await params;
+  const paramId = await param.id;
   const category = await db.query.categories.findMany({
-    where: eq(categories.userId, Number(params.id)),
+    where: eq(categories.userId, Number(paramId)),
   });
 
   if (!category.length)
