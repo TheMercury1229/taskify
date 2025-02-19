@@ -158,10 +158,10 @@ export default function Home() {
       <section className="py-20 bg-yellow-400">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl lg:text-5xl font-bold mb-12 text-center">
-            Ready to Take Control of Your Finances?
+            Ready to Take Control of Your Tasks?
           </h2>
           <p className="text-gray-600 mb-8 max-w-2xl mx-auto text-center">
-            Join thousands of users who are already managing their finances
+            Join thousands of users who are already managing their tasks
             smarter with our app.
           </p>
           <Link
