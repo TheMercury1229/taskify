@@ -9,7 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { dummyTasks, dummyProjects, dummyCategories } from "@/data";
 import { TaskList } from "@/components/dashboard/TaskList";
 import { PlusCircle, X } from "lucide-react";
 import Link from "next/link";

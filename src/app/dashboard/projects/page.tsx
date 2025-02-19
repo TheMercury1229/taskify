@@ -7,7 +7,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { MoreHorizontal, PlusIcon } from "lucide-react";
-import { dummyProjects, dummyTasks } from "@/data";
 import React from "react";
 import Link from "next/link";
 import {

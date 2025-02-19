@@ -1,5 +1,4 @@
 import React from "react";
-import { dummyTasks } from "@/data";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Task } from "@/index";
 
