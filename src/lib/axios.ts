@@ -2,7 +2,7 @@ import axios from "axios";
 import { config } from "dotenv";
 config();
 export const axiosInstance = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL: "https://taskify-xi-six.vercel.app/api",
 });
 
 // Add a request interceptor to automatically attach the token
