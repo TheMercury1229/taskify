@@ -31,18 +31,35 @@ export async function PATCH(
 ) {
   const { decoded, error, status } = verifyToken(req);
   if (error) return NextResponse.json({ error, success: false }, { status });
+
   if (!decoded || typeof decoded !== "object" || !decoded.id) {
     return NextResponse.json(
       { error: "Invalid token payload" },
       { status: 400 }
     );
   }
+
+  const { id } = params;
   const updates = await req.json();
+
+  // ✅ Ensure dueDate is a valid Date before updating
+  const parsedDueDate = updates.dueDate ? new Date(updates.dueDate) : null;
+
+  // ✅ Ensure only valid fields are updated
+  const updateData = {
+    ...(updates.title && { title: updates.title }),
+    ...(updates.description && { description: updates.description }),
+    ...(updates.priority !== undefined && { priority: updates.priority }),
+    ...(updates.status && { status: updates.status }),
+    dueDate: parsedDueDate,
+  };
+
   const updatedTask = await db
     .update(tasks)
-    .set(updates)
-    .where(eq(tasks.id, Number(params.id)))
+    .set(updateData)
+    .where(eq(tasks.id, Number(id)))
     .returning();
+
   return NextResponse.json(updatedTask[0]);
 }
 
@@ -57,7 +74,8 @@ export async function DELETE(
       { status: 400 }
     );
   }
+  const param = await params;
   if (error) return NextResponse.json({ error, success: false }, { status });
-  await db.delete(tasks).where(eq(tasks.id, Number(params.id)));
+  await db.delete(tasks).where(eq(tasks.id, Number(param.id)));
   return NextResponse.json({ message: "Task deleted" });
 }

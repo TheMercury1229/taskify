@@ -65,23 +65,23 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {tasksForDate.map((task) => (
+                  {tasksForDate.map((task: Task) => (
                     <TableRow key={task.id}>
                       <TableCell>{task.title}</TableCell>
                       <TableCell>
                         <span
                           className={`px-2 py-1 rounded-full
                             ${
-                              task.priority === 1
+                              task?.priority == "1"
                                 ? "text-green-500 bg-green-500/10"
-                                : task.priority === 2
+                                : task.priority == "2"
                                 ? "text-orange-500 bg-orange-500/10"
                                 : "text-red-500 bg-red-500/10"
                             }`}
                         >
-                          {task.priority === 1
+                          {task.priority === "1"
                             ? "Low"
-                            : task.priority === 2
+                            : task.priority === "2"
                             ? "Medium"
                             : "High"}
                         </span>
